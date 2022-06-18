@@ -39,9 +39,8 @@ public class ProcessEngine  {
         asyncThread.submit(() ->{
             Scheduler scheduler = new Scheduler();
             scheduler.schedule(
-                    executeAsyncProcess,           // the runnable to be scheduled
-                    Schedules.fixedDelaySchedule(Duration.ofMillis(1)) // the schedule associated to the runnable
-            );        });
+                    executeAsyncProcess,Schedules.fixedDelaySchedule(Duration.ofMillis(1)));  
+        });
     }
 
 
