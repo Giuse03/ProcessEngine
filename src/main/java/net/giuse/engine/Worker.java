@@ -10,6 +10,7 @@ public class Worker {
     public static void executeProcess(CompletableFuture<Workload> instanceClass, boolean async) {
         if (async) {
             instanceClass.whenCompleteAsync((instanceKlass, throwable) -> ProcessEngine.getProcessEngine().executeNewProcessAsync(instanceKlass));
+            return;
         }
         instanceClass.whenComplete((instanceKlass, throwable) -> ProcessEngine.getProcessEngine().executeNewProcessSync(instanceKlass));
     }
