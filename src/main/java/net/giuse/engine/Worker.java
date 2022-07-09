@@ -8,10 +8,9 @@ public class Worker {
 
     @SneakyThrows
     public static void executeProcess(CompletableFuture<Workload> instanceClass, boolean async) {
-        if(async){
-            ProcessEngine.getProcessEngine().executeNewProcessAsync(instanceClass.get());
-        }else {
-            ProcessEngine.getProcessEngine().executeNewProcessSync(instanceClass.get());
+        if (async) {
+            instanceClass.whenCompleteAsync((instanceKlass, throwable) -> ProcessEngine.getProcessEngine().executeNewProcessAsync(instanceKlass));
         }
+        instanceClass.whenComplete((instanceKlass, throwable) -> ProcessEngine.getProcessEngine().executeNewProcessSync(instanceKlass));
     }
 }
