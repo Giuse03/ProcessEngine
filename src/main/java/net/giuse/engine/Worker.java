@@ -10,11 +10,11 @@ public class Worker {
 
     private final ProcessEngine processEngine;
     @SneakyThrows
-    public void executeProcess(CompletableFuture<Workload> instanceClass, boolean async) {
+    public void executeProcess(Workload workload, boolean async) {
         if (async) {
-            instanceClass.whenCompleteAsync((instanceKlass, throwable) -> processEngine.executeNewProcessAsync(instanceKlass),processEngine.getForkJoinPool());
+            CompletableFuture.runAsync( ()-> processEngine.executeNewProcessAsync(workload),processEngine.getForkJoinPool());
             return;
         }
-        instanceClass.whenComplete((instanceKlass, throwable) -> processEngine.executeNewProcessSync(instanceKlass));
+        processEngine.executeNewProcessSync(workload);
     }
 }
