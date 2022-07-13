@@ -29,7 +29,7 @@ public class ProcessEngine  {
 
     public ProcessEngine(JavaPlugin javaPlugin){
 
-        Bukkit.getScheduler().scheduleAsyncRepeatingTask(javaPlugin, executeSyncProcess,0L,0L);
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(javaPlugin, executeSyncProcess,0L,0L);
         ListeningScheduledExecutorService scheduledExecutorService = MoreExecutors.listeningDecorator(Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors()/2));
         CompletableFuture.runAsync(() -> scheduledExecutorService.scheduleAtFixedRate(executeAsyncProcess,20L,20L, TimeUnit.MICROSECONDS),forkJoinPool);
     }
