@@ -17,21 +17,22 @@ public class ProcessEngine  {
     @Getter
     private final ExecutorService forkJoinPool = Executors.newWorkStealingPool(Runtime.getRuntime().availableProcessors()/2);
     private final ExecuteProcess executeSyncProcess = new ExecuteProcess();
-    private final ExecuteProcess executeAsyncProcess = new ExecuteProcess();;
+    private final ExecuteProcess executeAsyncProcess = new ExecuteProcess();
 
     public void executeNewProcessSync(Workload workload) {
         executeSyncProcess.addWorkload(workload);
     }
 
-    public void executeNewProcessAsync(Workload workload) {
+    public synchronized void executeNewProcessAsync(Workload workload) {
         executeAsyncProcess.addWorkload(workload);
     }
 
     public ProcessEngine(JavaPlugin javaPlugin){
 
         Bukkit.getScheduler().scheduleSyncRepeatingTask(javaPlugin, executeSyncProcess,0L,0L);
-        ListeningScheduledExecutorService scheduledExecutorService = MoreExecutors.listeningDecorator(Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors()/2));
-        CompletableFuture.runAsync(() -> scheduledExecutorService.scheduleAtFixedRate(executeAsyncProcess,20L,20L, TimeUnit.MICROSECONDS),forkJoinPool);
+        ListeningScheduledExecutorService executorService = MoreExecutors.listeningDecorator( Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors()/2));
+        CompletableFuture.runAsync(() ->executorService.scheduleAtFixedRate(executeAsyncProcess,1,1,TimeUnit.MILLISECONDS),forkJoinPool);
+
     }
 
 

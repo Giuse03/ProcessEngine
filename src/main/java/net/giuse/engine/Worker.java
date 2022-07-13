@@ -12,7 +12,7 @@ public class Worker {
     @SneakyThrows
     public void executeProcess(Workload workload, boolean async) {
         if (async) {
-            CompletableFuture.runAsync( ()-> processEngine.executeNewProcessAsync(workload),processEngine.getForkJoinPool());
+             processEngine.executeNewProcessAsync(workload);
             return;
         }
         processEngine.executeNewProcessSync(workload);
