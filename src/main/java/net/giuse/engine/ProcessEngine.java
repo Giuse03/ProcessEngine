@@ -13,9 +13,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class ProcessEngine  {
-
-    @Getter
-    private final ExecutorService forkJoinPool = Executors.newWorkStealingPool(Runtime.getRuntime().availableProcessors()/2);
     private final ExecuteProcess executeSyncProcess = new ExecuteProcess();
     private final ExecuteProcess executeAsyncProcess = new ExecuteProcess();
 
@@ -29,9 +26,8 @@ public class ProcessEngine  {
 
     public ProcessEngine(JavaPlugin javaPlugin){
 
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(javaPlugin, executeSyncProcess,0L,0L);
-        ListeningScheduledExecutorService executorService = MoreExecutors.listeningDecorator( Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors()/2));
-        CompletableFuture.runAsync(() ->executorService.scheduleAtFixedRate(executeAsyncProcess,1,1,TimeUnit.MILLISECONDS),forkJoinPool);
+        Bukkit.getScheduler().runTaskTimer(javaPlugin, executeSyncProcess,0L,0L);
+        Bukkit.getScheduler().runTaskTimerAsynchronously(javaPlugin,executeAsyncProcess,0L,0L);
 
     }
 
